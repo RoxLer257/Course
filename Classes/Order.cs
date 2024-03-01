@@ -14,14 +14,14 @@ namespace CourseProject.Classes
     
     public partial class Order
     {
-        public int ID_order { get; set; }
-        public int ID_dishes { get; set; }
-        public int ID_Drink { get; set; }
+        public int ID_Order { get; set; }
+        public int ID_Dishes { get; set; }
+        public int id_Users { get; set; }
         public int Quantity { get; set; }
         public double Summa { get; set; }
         public System.DateTime Order_Date { get; set; }
     
+        public virtual Users Users { get; set; }
         public virtual Dishes Dishes { get; set; }
-        public virtual Drink Drink { get; set; }
     }
 }

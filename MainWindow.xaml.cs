@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography.X509Certificates;
+
 
 namespace CourseProject
 {
@@ -37,11 +39,10 @@ namespace CourseProject
                 this.DragMove();
             }
         }
-
         private bool IsMaximized = false;
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount == 2)
+            if(e.ClickCount == 2)
             {
                 if (IsMaximized)
                 {
@@ -49,13 +50,11 @@ namespace CourseProject
                     this.Width = 1080;
                     this.Height = 720;
 
-                    IsMaximized = false;
+                    IsMaximized = false; 
                 }
-
                 else
                 {
                     this.WindowState = WindowState.Maximized;
-
                     IsMaximized = true;
                 }
             }

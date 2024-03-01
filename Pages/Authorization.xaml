@@ -23,7 +23,7 @@
                            Text="Войти или зарегистрироваться"/>
 
                     <Grid>
-                        <TextBlock Margin="35 0 5 0" VerticalAlignment="Center" Foreground="#bdbdbd"
+                        <TextBlock Margin="35 0 10 0" VerticalAlignment="Center" Foreground="#bdbdbd"
                                    Panel.ZIndex="1" IsHitTestVisible="False" Text="Логин"
                                    Visibility="{Binding ElementName=txtLogin, Path=Text.IsEmpty,Converter={StaticResource BoolToVis}}"/>
                         <TextBox x:Name="txtLogin" Style="{StaticResource Login}"/>
@@ -32,7 +32,7 @@
                     </Grid>
 
                     <Grid>
-                        <TextBlock Margin="35 0 5 0" VerticalAlignment="Center" Foreground="#bdbdbd"
+                        <TextBlock Margin="35 0 10 0" VerticalAlignment="Center" Foreground="#bdbdbd"
                                    Panel.ZIndex="1" IsHitTestVisible="False" Text="Пароль"
                                    Visibility="{Binding ElementName=txtLogin, Path=Text.IsEmpty,Converter={StaticResource BoolToVis}}"/>
                         <PasswordBox x:Name="txtpass" Style="{StaticResource Pass}"/>

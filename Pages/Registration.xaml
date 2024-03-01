@@ -15,7 +15,7 @@
 
     <Border>
         <Grid>
-            <Border Width="300" VerticalAlignment="Center" HorizontalAlignment="Center"
+            <Border Width="325" VerticalAlignment="Center" HorizontalAlignment="Center"
             BorderBrush="#FFFFFF" BorderThickness="2" CornerRadius="10" Padding="30"
             Background="White">
                 <StackPanel>

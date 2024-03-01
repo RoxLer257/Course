@@ -13,15 +13,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="ID_Group" Type="int" Nullable="false" />
           <Property Name="Price" Type="float" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Drink">
-          <Key>
-            <PropertyRef Name="ID_Drink" />
-          </Key>
-          <Property Name="ID_Drink" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name_Drink" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ID_Group" Type="int" Nullable="false" />
-          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="ImagePath" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Group">
           <Key>
@@ -32,32 +24,30 @@
         </EntityType>
         <EntityType Name="Order">
           <Key>
-            <PropertyRef Name="ID_order" />
+            <PropertyRef Name="ID_Order" />
           </Key>
-          <Property Name="ID_order" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ID_dishes" Type="int" Nullable="false" />
-          <Property Name="ID_Drink" Type="int" Nullable="false" />
+          <Property Name="ID_Order" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_Dishes" Type="int" Nullable="false" />
+          <Property Name="id_Users" Type="int" Nullable="false" />
           <Property Name="Quantity" Type="int" Nullable="false" />
           <Property Name="Summa" Type="float" Nullable="false" />
           <Property Name="Order_Date" Type="datetime" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
+        <EntityType Name="Roles">
           <Key>
-            <PropertyRef Name="diagram_id" />
+            <PropertyRef Name="ID_Role" />
           </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
+          <Property Name="ID_Role" Type="int" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
-            <PropertyRef Name="id" />
+            <PropertyRef Name="id_Users" />
           </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_Users" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Role" Type="int" />
         </EntityType>
         <Association Name="FK_Dishes_Group">
           <End Role="Group" Type="Self.Group" Multiplicity="1" />
@@ -71,18 +61,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Drink_Group">
-          <End Role="Group" Type="Self.Group" Multiplicity="1" />
-          <End Role="Drink" Type="Self.Drink" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Group">
-              <PropertyRef Name="ID_Group" />
-            </Principal>
-            <Dependent Role="Drink">
-              <PropertyRef Name="ID_Group" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Order_Dishes">
           <End Role="Dishes" Type="Self.Dishes" Multiplicity="1" />
           <End Role="Order" Type="Self.Order" Multiplicity="*" />
@@ -91,71 +69,145 @@
               <PropertyRef Name="ID_Dishes" />
             </Principal>
             <Dependent Role="Order">
-              <PropertyRef Name="ID_dishes" />
+              <PropertyRef Name="ID_Dishes" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Order_Drink">
-          <End Role="Drink" Type="Self.Drink" Multiplicity="1" />
+        <Association Name="FK_Order_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Order" Type="Self.Order" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Drink">
-              <PropertyRef Name="ID_Drink" />
+            <Principal Role="Users">
+              <PropertyRef Name="id_Users" />
             </Principal>
             <Dependent Role="Order">
-              <PropertyRef Name="ID_Drink" />
+              <PropertyRef Name="id_Users" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="0..1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="ID_Role" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="Role" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="Хранилище CourseModelContainer">
           <EntitySet Name="Dishes" EntityType="Self.Dishes" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Drink" EntityType="Self.Drink" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Dishes_Group" Association="Self.FK_Dishes_Group">
             <End Role="Group" EntitySet="Group" />
             <End Role="Dishes" EntitySet="Dishes" />
           </AssociationSet>
-          <AssociationSet Name="FK_Drink_Group" Association="Self.FK_Drink_Group">
-            <End Role="Group" EntitySet="Group" />
-            <End Role="Drink" EntitySet="Drink" />
-          </AssociationSet>
           <AssociationSet Name="FK_Order_Dishes" Association="Self.FK_Order_Dishes">
             <End Role="Dishes" EntitySet="Dishes" />
             <End Role="Order" EntitySet="Order" />
           </AssociationSet>
-          <AssociationSet Name="FK_Order_Drink" Association="Self.FK_Order_Drink">
-            <End Role="Drink" EntitySet="Drink" />
+          <AssociationSet Name="FK_Order_Users" Association="Self.FK_Order_Users">
+            <End Role="Users" EntitySet="Users" />
             <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Roles" Association="Self.FK_Users_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CourseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="ID_Group" />
+          </Key>
+          <Property Name="ID_Group" Type="Int32" Nullable="false" />
+          <Property Name="Name_Group" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Dishes" Relationship="CourseModel.FK_Dishes_Group" FromRole="Group" ToRole="Dishes" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="ID_Order" />
+          </Key>
+          <Property Name="ID_Order" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_Dishes" Type="Int32" Nullable="false" />
+          <Property Name="id_Users" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="Summa" Type="Double" Nullable="false" />
+          <Property Name="Order_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Order_Users" FromRole="Order" ToRole="Users" />
+          <NavigationProperty Name="Dishes" Relationship="CourseModel.FK_Order_Dishes" FromRole="Order" ToRole="Dishes" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="ID_Role" />
+          </Key>
+          <Property Name="ID_Role" Type="Int32" Nullable="false" />
+          <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Users_Roles" FromRole="Roles" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="id_Users" />
+          </Key>
+          <Property Name="id_Users" Type="Int32" Nullable="false" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Role" Type="Int32" />
+          <NavigationProperty Name="Order" Relationship="Self.FK_Order_Users" FromRole="Users" ToRole="Order" />
+          <NavigationProperty Name="Roles" Relationship="Self.FK_Users_Roles" FromRole="Users" ToRole="Roles" />
+        </EntityType>
+        <Association Name="FK_Order_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id_Users" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="id_Users" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="0..1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="ID_Role" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="Role" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="CourseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Group" EntityType="Self.Group" />
+          <EntitySet Name="Order" EntityType="Self.Order" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <AssociationSet Name="FK_Order_Users" Association="Self.FK_Order_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Roles" Association="Self.FK_Users_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
           <EntitySet Name="Dishes" EntityType="CourseModel.Dishes" />
-          <EntitySet Name="Drink" EntityType="CourseModel.Drink" />
-          <EntitySet Name="Group" EntityType="CourseModel.Group" />
-          <EntitySet Name="Order" EntityType="CourseModel.Order" />
-          <EntitySet Name="sysdiagrams" EntityType="CourseModel.sysdiagrams" />
-          <EntitySet Name="Users" EntityType="CourseModel.Users" />
           <AssociationSet Name="FK_Dishes_Group" Association="CourseModel.FK_Dishes_Group">
             <End Role="Group" EntitySet="Group" />
             <End Role="Dishes" EntitySet="Dishes" />
           </AssociationSet>
           <AssociationSet Name="FK_Order_Dishes" Association="CourseModel.FK_Order_Dishes">
             <End Role="Dishes" EntitySet="Dishes" />
-            <End Role="Order" EntitySet="Order" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Drink_Group" Association="CourseModel.FK_Drink_Group">
-            <End Role="Group" EntitySet="Group" />
-            <End Role="Drink" EntitySet="Drink" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Order_Drink" Association="CourseModel.FK_Order_Drink">
-            <End Role="Drink" EntitySet="Drink" />
             <End Role="Order" EntitySet="Order" />
           </AssociationSet>
         </EntityContainer>
@@ -167,59 +219,9 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ID_Group" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="ImagePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Group" Relationship="CourseModel.FK_Dishes_Group" FromRole="Dishes" ToRole="Group" />
           <NavigationProperty Name="Order" Relationship="CourseModel.FK_Order_Dishes" FromRole="Dishes" ToRole="Order" />
-        </EntityType>
-        <EntityType Name="Drink">
-          <Key>
-            <PropertyRef Name="ID_Drink" />
-          </Key>
-          <Property Name="ID_Drink" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name_Drink" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ID_Group" Type="Int32" Nullable="false" />
-          <Property Name="Price" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Group" Relationship="CourseModel.FK_Drink_Group" FromRole="Drink" ToRole="Group" />
-          <NavigationProperty Name="Order" Relationship="CourseModel.FK_Order_Drink" FromRole="Drink" ToRole="Order" />
-        </EntityType>
-        <EntityType Name="Group">
-          <Key>
-            <PropertyRef Name="ID_Group" />
-          </Key>
-          <Property Name="ID_Group" Type="Int32" Nullable="false" />
-          <Property Name="Name_Group" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Dishes" Relationship="CourseModel.FK_Dishes_Group" FromRole="Group" ToRole="Dishes" />
-          <NavigationProperty Name="Drink" Relationship="CourseModel.FK_Drink_Group" FromRole="Group" ToRole="Drink" />
-        </EntityType>
-        <EntityType Name="Order">
-          <Key>
-            <PropertyRef Name="ID_order" />
-          </Key>
-          <Property Name="ID_order" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ID_dishes" Type="Int32" Nullable="false" />
-          <Property Name="ID_Drink" Type="Int32" Nullable="false" />
-          <Property Name="Quantity" Type="Int32" Nullable="false" />
-          <Property Name="Summa" Type="Double" Nullable="false" />
-          <Property Name="Order_Date" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Dishes" Relationship="CourseModel.FK_Order_Dishes" FromRole="Order" ToRole="Dishes" />
-          <NavigationProperty Name="Drink" Relationship="CourseModel.FK_Order_Drink" FromRole="Order" ToRole="Drink" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="Users">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Dishes_Group">
           <End Type="CourseModel.Group" Role="Group" Multiplicity="1" />
@@ -241,31 +243,7 @@
               <PropertyRef Name="ID_Dishes" />
             </Principal>
             <Dependent Role="Order">
-              <PropertyRef Name="ID_dishes" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Drink_Group">
-          <End Type="CourseModel.Group" Role="Group" Multiplicity="1" />
-          <End Type="CourseModel.Drink" Role="Drink" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Group">
-              <PropertyRef Name="ID_Group" />
-            </Principal>
-            <Dependent Role="Drink">
-              <PropertyRef Name="ID_Group" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Order_Drink">
-          <End Type="CourseModel.Drink" Role="Drink" Multiplicity="1" />
-          <End Type="CourseModel.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Drink">
-              <PropertyRef Name="ID_Drink" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="ID_Drink" />
+              <PropertyRef Name="ID_Dishes" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -275,63 +253,52 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="Хранилище CourseModelContainer" CdmEntityContainer="CourseEntities">
-          <EntitySetMapping Name="Dishes">
-            <EntityTypeMapping TypeName="CourseModel.Dishes">
-              <MappingFragment StoreEntitySet="Dishes">
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="ID_Group" ColumnName="ID_Group" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ID_Dishes" ColumnName="ID_Dishes" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Drink">
-            <EntityTypeMapping TypeName="CourseModel.Drink">
-              <MappingFragment StoreEntitySet="Drink">
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="ID_Group" ColumnName="ID_Group" />
-                <ScalarProperty Name="Name_Drink" ColumnName="Name_Drink" />
-                <ScalarProperty Name="ID_Drink" ColumnName="ID_Drink" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Group">
             <EntityTypeMapping TypeName="CourseModel.Group">
               <MappingFragment StoreEntitySet="Group">
-                <ScalarProperty Name="Name_Group" ColumnName="Name_Group" />
                 <ScalarProperty Name="ID_Group" ColumnName="ID_Group" />
+                <ScalarProperty Name="Name_Group" ColumnName="Name_Group" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Order">
             <EntityTypeMapping TypeName="CourseModel.Order">
               <MappingFragment StoreEntitySet="Order">
-                <ScalarProperty Name="Order_Date" ColumnName="Order_Date" />
-                <ScalarProperty Name="Summa" ColumnName="Summa" />
+                <ScalarProperty Name="ID_Order" ColumnName="ID_Order" />
+                <ScalarProperty Name="ID_Dishes" ColumnName="ID_Dishes" />
+                <ScalarProperty Name="id_Users" ColumnName="id_Users" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="ID_Drink" ColumnName="ID_Drink" />
-                <ScalarProperty Name="ID_dishes" ColumnName="ID_dishes" />
-                <ScalarProperty Name="ID_order" ColumnName="ID_order" />
+                <ScalarProperty Name="Summa" ColumnName="Summa" />
+                <ScalarProperty Name="Order_Date" ColumnName="Order_Date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="CourseModel.sysdiagrams">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="definition" ColumnName="definition" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="name" ColumnName="name" />
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="CourseModel.Roles">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="ID_Role" ColumnName="ID_Role" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="CourseModel.Users">
               <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="id_Users" ColumnName="id_Users" />
                 <ScalarProperty Name="Login" ColumnName="Login" />
-                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dishes">
+            <EntityTypeMapping TypeName="CourseModel.Dishes">
+              <MappingFragment StoreEntitySet="Dishes">
+                <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ID_Group" ColumnName="ID_Group" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID_Dishes" ColumnName="ID_Dishes" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

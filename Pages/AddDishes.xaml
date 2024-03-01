@@ -1,0 +1,68 @@
+﻿<Page x:Class="CourseProject.Pages.AddDishes"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:CourseProject.Classes"
+      mc:Ignorable="d" 
+      d:DesignHeight="720" d:DesignWidth="1080"
+      Title="AddDishes">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <local:NullToImageSourceConverter x:Key ="NullToImageSourceConverter"/>
+    </Page.Resources>
+
+
+    <Grid>
+        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+
+            <Grid Width="300" HorizontalAlignment="Center">
+                <TextBlock Margin="20 0" VerticalAlignment="Center" Foreground="Black" IsHitTestVisible="False"
+                               Panel.ZIndex="1" Text="Введите название блюда..."
+                               Visibility="{Binding ElementName=TxtName, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                <TextBox x:Name="TxtName" Style="{StaticResource txtName}"/>
+            </Grid>
+
+            <Grid Width="300" HorizontalAlignment="Center">
+                <TextBlock Margin="20 0" VerticalAlignment="Center" Foreground="Black" IsHitTestVisible="False"
+                           Panel.ZIndex="1" Text="Выберите категорию блюда..."
+                           Visibility="{Binding ElementName=CmbGroup, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                <ComboBox x:Name="CmbGroup"/>
+            </Grid>
+
+            <Grid Width="300" HorizontalAlignment="Center">
+                <TextBlock Margin="20 0" VerticalAlignment="Center" Foreground="Black" IsHitTestVisible="False"
+                               Panel.ZIndex="1" Text="Введите цену блюда..."
+                               Visibility="{Binding ElementName=TxtPrice, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                <TextBox x:Name="TxtPrice" Style="{StaticResource txtprice}"/>
+            </Grid>
+
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Button x:Name="AddImage" Content="Добавить фотографию" Width="130"
+                        Margin="5"
+                        Height="20" Click="AddImage_Click" HorizontalAlignment="Left"/>
+                <TextBox x:Name="TxtImagePath" Visibility="Collapsed"/>
+            </Grid>
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                <Image x:Name="MyImage" Stretch="Uniform" Height="200">
+                    <Image.Source>
+                        <Binding Path="ImagePath" Converter="{StaticResource NullToImageSourceConverter}" />
+                    </Image.Source>
+                </Image>
+
+
+            </StackPanel>
+            <Button x:Name="Back" Width="100" Margin="5"
+                        Click="Back_Click" Content="Назад">
+            </Button>
+
+            <Button x:Name="Save" Width="100" Margin="5"
+                        Click="Save_Click" Content="Сохранить">
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>

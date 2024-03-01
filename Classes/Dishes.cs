@@ -24,6 +24,7 @@ namespace CourseProject.Classes
         public string Name { get; set; }
         public int ID_Group { get; set; }
         public double Price { get; set; }
+        public string ImagePath { get; set; }
     
         public virtual Group Group { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

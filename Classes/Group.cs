@@ -18,7 +18,6 @@ namespace CourseProject.Classes
         public Group()
         {
             this.Dishes = new HashSet<Dishes>();
-            this.Drink = new HashSet<Drink>();
         }
     
         public int ID_Group { get; set; }
@@ -26,7 +25,5 @@ namespace CourseProject.Classes
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Dishes> Dishes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Drink> Drink { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CourseProject.Classes;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace CourseProject.Pages
     /// </summary>
     public partial class Authorization : Page
     {
+
         public Authorization()
         {
             InitializeComponent();
@@ -28,10 +30,14 @@ namespace CourseProject.Pages
 
         private void BtnEnter_Click(object sender, RoutedEventArgs e)
         {
+            string login = txtLogin.Text;
+            string password = txtpass.Password;
+
             try
             {
-                var userObj = AppConnect.CourseEntities.Users.FirstOrDefault(x => x.Login == txtLogin.Text && x.Password == txtpass.Password);
-                if (userObj == null)
+                var user = AppConnect.CourseEntities.Users.FirstOrDefault(u => u.Login == login && u.Password == password);
+
+                if (user == null)
                 {
                     txtLogin.ToolTip = "Такого пользователя нет";
                     txtLogin.Background = Brushes.Red;
@@ -40,12 +46,14 @@ namespace CourseProject.Pages
                 }
                 else
                 {
+                    Classes.ClassFrame.ID_Role = user.id_Users;
                     Classes.ClassFrame.frmObj.Navigate(new Pages.Main());
                 }
             }
-            catch (Exception Ex)
+            catch (Exception ex)
             {
-                MessageBox.Show("Ошибка " + Ex.Message.ToString() + "Критическая работа приложения", "Уведомления", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка при авторизации",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

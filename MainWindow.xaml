@@ -5,17 +5,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:CourseProject.Pages"
         mc:Ignorable="d" 
-        Title="DoorDash" Height="720" Width="1080" WindowStartupLocation="CenterScreen" Background="Transparent"
-        AllowsTransparency="False"
+        Title="DoorDash" Height="720" Width="1080" Background="Transparent"
         Icon="Images/doordash logo circle.png">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Window.Resources>
-    
-    <Border Background="#ffffff"
-            MouseDown="Border_MouseDown"
-            MouseLeftButtonDown="Border_MouseLeftButtonDown">
+
+    <Border Background="#ffffff" MouseDown="Border_MouseDown" MouseLeftButtonDown="Border_MouseLeftButtonDown">
 
         <Grid>
             <Grid.RowDefinitions>

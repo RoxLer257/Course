@@ -1,6 +1,7 @@
 ﻿<Page x:Class="CourseProject.Pages.basket"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CourseProject.Pages"
@@ -9,6 +10,102 @@
       Title="basket">
 
     <Border>
-        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+
+            <Border x:Name="NotificationBorder" Background="LightGray" 
+                    CornerRadius="5" Padding="10" Grid.Row="0"
+                    HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed">
+                <TextBlock Text="{Binding NotificationText}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+
+            <Grid Grid.Row="1">
+
+                <DataGrid x:Name="BasketLtV"
+                          AutoGenerateColumns="False"
+                          Visibility="Visible">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="200"
+                                            Binding="{Binding Dishes.Name}"
+                                            Header="Название блюда"/>
+                        <DataGridTextColumn Width="200"
+                                            Binding="{Binding Quantity}"
+                                            Header="Количество"/>
+                        <DataGridTextColumn Width="150"
+                                            Binding="{Binding Summa}"
+                                            Header="Цена, руб"/>
+                        <DataGridTextColumn Width="200"
+                                            Binding="{Binding Order_Date}"
+                                            Header="Дата заказа"/>
+
+                        <DataGridTemplateColumn
+                            Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Name="BtnDel"
+                                    Click="BtnDel_Click"
+                                    Content="Удалить блюдо"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <Grid Grid.Column="1">
+
+                <Button
+                    Click="Button_Click"
+                    Margin="20 0 30 20" Style="{StaticResource TopButton}">
+                    <Icon:PackIconMaterial Kind="Basket" Width="20" Height="20"/>
+                </Button>
+
+                <Button
+                    x:Name="account" Width="20" Height="20" 
+                        Margin="20 0 5 18"
+                        Click="account_Click" Style="{StaticResource TopButton}">
+                    <Icon:PackIconMaterial Kind="Account"/>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Column="1"
+                  Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="Back" Grid.Row="0" Click="Back_Click"
+                        Content="Назад" BorderBrush="#d61818"
+                        Background="#d61818" Foreground="#FFFFFF"
+                        Margin="10" Width="100"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                        Style="{StaticResource Sign}"/>
+
+                <Button x:Name="Pay" Grid.Row="1" Click="Pay_Click"
+                        Content="Оплатить"
+                        Margin="10" Width="100"
+                        HorizontalAlignment="Center" VerticalAlignment="Top"
+                        Style="{StaticResource Sign}"/>
+                <TextBlock Grid.Row="2"
+                           Text="Общая сумма заказа:"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                           Margin="7"/>
+                <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center"
+                           x:Name="totalsum"
+                           Loaded="totalsum_Loaded"
+                           Margin="7"/>
+
+            </Grid>
+        </Grid>
     </Border>
 </Page>

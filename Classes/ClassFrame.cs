@@ -10,5 +10,6 @@ namespace CourseProject.Classes
     class ClassFrame
     {
         public static Frame frmObj;
+        public static int ID_Role;
     }
 }

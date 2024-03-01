@@ -14,8 +14,19 @@ namespace CourseProject.Classes
     
     public partial class Users
     {
-        public int id { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Users()
+        {
+            this.Order = new HashSet<Order>();
+        }
+    
+        public int id_Users { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public Nullable<int> Role { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order> Order { get; set; }
+        public virtual Roles Roles { get; set; }
     }
 }

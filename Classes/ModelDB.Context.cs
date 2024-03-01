@@ -15,7 +15,6 @@ namespace CourseProject.Classes
     
     public partial class CourseEntities : DbContext
     {
-
         private static CourseEntities _context;
 
         public static CourseEntities GetContext()
@@ -24,7 +23,6 @@ namespace CourseProject.Classes
                 _context = new CourseEntities();
             return _context;
         }
-
         public CourseEntities()
             : base("name=CourseEntities")
         {
@@ -35,11 +33,10 @@ namespace CourseProject.Classes
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Dishes> Dishes { get; set; }
-        public virtual DbSet<Drink> Drink { get; set; }
         public virtual DbSet<Group> Group { get; set; }
         public virtual DbSet<Order> Order { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Dishes> Dishes { get; set; }
     }
 }

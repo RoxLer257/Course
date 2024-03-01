@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Net;
+using Microsoft.SqlServer.Management.Smo;
+using System.Data.Entity;
 
 namespace CourseProject.Pages
 {
@@ -45,29 +47,33 @@ namespace CourseProject.Pages
 
         private void BtnCreate_Click(object sender, RoutedEventArgs e)
         {
-            if (AppConnect.CourseEntities.Users.Count(x => x.Login == txtLogin.Text) > 0)
+            using (var context = new CourseEntities())
             {
-                txtLogin.ToolTip = "Пользователь с таким логином уже есть";
-                txtLogin.Background = Brushes.Red;
-                MessageBox.Show("Пользователь с таким логином есть", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-
-            try
-            {
-                Users users = new Users()
+                if (context.Users.Any(u => u.Login == txtLogin.Text))
                 {
-                    Login = txtLogin.Text,
-                    Password = txtpass.Text,
-                };
-                AppConnect.CourseEntities.Users.Add(users);
-                AppConnect.CourseEntities.SaveChanges();
-                ClassFrame.frmObj.Navigate(new Main());
-            }
-            catch
-            {
-                MessageBox.Show("Ошибка при добавлении данных", "Уведомление",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                    txtLogin.ToolTip = "Пользователь с таким логином уже существует";
+                    txtLogin.Background = Brushes.Red;
+                    MessageBox.Show("Пользователь с таким логином уже существует", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                try
+                {
+                    Users newUser = new Users()
+                    {
+                        Login = txtLogin.Text,
+                        Password = txtpass.Text,
+                    };
+                    context.Users.Add(newUser);
+                    context.SaveChanges();
+
+                    MessageBox.Show("Регистрация прошла успешно!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClassFrame.frmObj.Navigate(new Main());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка при регистрации: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

@@ -1,0 +1,21 @@
+﻿<Window x:Class="CourseProject.Pages.Pay"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CourseProject.Pages"
+        mc:Ignorable="d"
+        Title="Pay" Height="150" Width="300"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Grid>
+        <TextBlock x:Name="messageTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                   TextWrapping="Wrap" Text="Уверены, что хотите оплатить?" Margin="10"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10">
+            <Button x:Name="BackBasket"
+                Content="Назад" Click="BackBasket_Click" Margin="5"/>
+            <Button x:Name="Payment"
+                Content="Оплатить" Click="Pay_Click" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>
