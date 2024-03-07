@@ -14,6 +14,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.IO;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -24,10 +25,10 @@ namespace CourseProject.Pages
     /// </summary>
     public partial class AddDishes : Page
     {
+        private List<Dishes> selectedDishes;
         Dishes Dishes = new Dishes();
 
         Main mainPage;
-        private List<Dishes> selectedDishes;
 
         public AddDishes(List<Dishes> selectedDishes)
         {
@@ -46,7 +47,7 @@ namespace CourseProject.Pages
             }
             else
             {
-                Dishes = new Dishes(); // Инициализация нового объекта, если dishes равен null
+                Dishes = new Dishes();
             }
 
             CmbGroup.ItemsSource = CourseEntities.GetContext().Group.ToList();
@@ -59,6 +60,7 @@ namespace CourseProject.Pages
             DataContext = Dishes;
         }
 
+        // добавление не локально(проверить)
         private void AddImage_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -67,30 +69,61 @@ namespace CourseProject.Pages
             {
                 string imagePath = openFileDialog.FileName;
 
-                // Проверяем, что путь к изображению не является пустым
                 if (!string.IsNullOrEmpty(imagePath))
                 {
-                    // Отображаем выбранное изображение
-                    MyImage.Source = new BitmapImage(new Uri(imagePath));
+                    string fileName = System.IO.Path.GetFileName(imagePath);
 
-                    // Сохраняем путь к выбранному изображению в TextBox (это предполагается в вашем XAML)
-                    TxtImagePath.Text = imagePath;
+                    string projectPath = System.IO.Path.GetFullPath(@"\CourseProject\Images");
+
+                    string targetPath = System.IO.Path.Combine(projectPath, fileName);
+
+                    string imagesDirectory = System.IO.Path.GetDirectoryName(targetPath);
+                    if (!System.IO.Directory.Exists(imagesDirectory))
+                    {
+                        System.IO.Directory.CreateDirectory(imagesDirectory);
+                    }
+
+                    System.IO.File.Copy(imagePath, targetPath, true);
+
+                    MyImage.Source = new BitmapImage(new Uri(targetPath));
+
+                    TxtImagePath.Text = targetPath;
                 }
                 else
                 {
-                    // Обработка случая, если путь к изображению пустой
                     MessageBox.Show("Выбранный файл изображения не найден.");
                 }
             }
         }
 
+        // добавление локально
+        //private void AddImage_Click(object sender, RoutedEventArgs e)
+        //{
+        //    OpenFileDialog openFileDialog = new OpenFileDialog();
+        //    openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|All files (*.*)|*.*";
+        //    if (openFileDialog.ShowDialog() == true)
+        //    {
+        //        string imagePath = openFileDialog.FileName;
 
+        //        if (!string.IsNullOrEmpty(imagePath))
+        //        {
+        //            MyImage.Source = new BitmapImage(new Uri(imagePath));
+
+        //            TxtImagePath.Text = imagePath;
+        //        }
+        //        else
+        //        {
+        //            MessageBox.Show("Выбранный файл изображения не найден.");
+        //        }
+        //    }
+        //}
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             Classes.ClassFrame.frmObj.Navigate(new Main());
         }
 
+        //основное сохранение
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             using (var context = new CourseEntities())
@@ -103,14 +136,12 @@ namespace CourseProject.Pages
                     ImagePath = TxtImagePath.Text
                 };
 
-                // Добавляем новое блюдо в базу данных
                 context.Dishes.Add(newDish);
                 context.SaveChanges();
             }
 
-            // После сохранения нового блюда, обновляем ListView
             mainPage.UpdateListView();
-            ClassFrame.frmObj.Navigate(new Main()); // Метод, который загружает данные в ListView
+            ClassFrame.frmObj.Navigate(new Main());
         }
     }
 }

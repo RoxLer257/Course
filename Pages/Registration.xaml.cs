@@ -67,6 +67,8 @@ namespace CourseProject.Pages
                     context.Users.Add(newUser);
                     context.SaveChanges();
 
+                    ClassFrame.ID_Role = newUser.id_Users;
+
                     MessageBox.Show("Регистрация прошла успешно!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                     ClassFrame.frmObj.Navigate(new Main());
                 }
@@ -74,6 +76,7 @@ namespace CourseProject.Pages
                 {
                     MessageBox.Show("Ошибка при регистрации: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+
             }
         }
 

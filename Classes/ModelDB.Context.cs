@@ -38,5 +38,6 @@ namespace CourseProject.Classes
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<Dishes> Dishes { get; set; }
+        public virtual DbSet<Order_History> Order_History { get; set; }
     }
 }

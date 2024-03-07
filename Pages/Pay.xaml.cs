@@ -38,7 +38,8 @@ namespace CourseProject.Pages
 
         private void Pay_Click(object sender, RoutedEventArgs e)
         {
-                ProcessPay();
+            BasketLtV.Items.Refresh();
+            ProcessPay();
         }
 
         private void ProcessPay()
@@ -51,40 +52,39 @@ namespace CourseProject.Pages
             else
             {
                 StringBuilder message = new StringBuilder();
-                double totalsum = 0;
-
-                foreach (var item in BasketLtV.Items)
-                {
-                    if (item is Order order)
-                    {
-                        // Добавить информацию о заказе в строку сообщения
-                        message.AppendLine($"Название блюда: {order.Dishes.Name}");
-                        message.AppendLine($"Количество: {order.Quantity}");
-                        message.AppendLine($"Цена: {order.Summa} рублей");
-                        message.AppendLine($"Дата заказа: {order.Order_Date}");
-                        message.AppendLine(); // Добавляем пустую строку для разделения заказов
-
-                        totalsum += order.Summa;
-                    }
-                }
-
-                message.AppendLine($"Общая цена заказа: {totalsum} рублей");
-
-                // Вывести сообщение с информацией о заказах
-                MessageBox.Show(message.ToString(), "Информация о заказах", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                Close();
+                double totalSum = 0;
 
                 using (var dbContext = new CourseEntities())
                 {
+                    List<int> orderIDsToDelete = new List<int>();
 
-                    // Удалить все записи из таблицы Order
-                    var orders = dbContext.Order.ToList();
-                    dbContext.Order.RemoveRange(orders);
+                    foreach (var item in BasketLtV.Items)
+                    {
+                        if (item is Order order)
+                        {
+                            message.AppendLine($"Название блюда: {order.Dishes.Name}");
+                            message.AppendLine($"Количество: {order.Quantity}");
+                            message.AppendLine($"Цена: {order.Summa} рублей");
+                            message.AppendLine();
 
-                    // Сохранить изменения в базе данных
+                            totalSum += order.Summa;
+
+                            orderIDsToDelete.Add(order.ID_Order);
+                        }
+                    }
+
+                    message.AppendLine($"Общая цена заказа: {totalSum} рублей");
+                    message.AppendLine($"Дата заказа: {DateTime.Now}");
+
+                    MessageBox.Show(message.ToString(), "Информация о заказах", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    var ordersToDelete = dbContext.Order.Where(o => orderIDsToDelete.Contains(o.ID_Order)).ToList();
+                    dbContext.Order.RemoveRange(ordersToDelete);
+
                     dbContext.SaveChanges();
                 }
+
+                Close();
             }
         }
     }

@@ -27,14 +27,8 @@
 
                 <Button x:Name="Basket"
                         Click="Basket_Click"
-                    Margin="20 0 30 20" Style="{StaticResource TopButton}">
+                    Margin="20 0 20 20" Style="{StaticResource TopButton}">
                     <Icon:PackIconMaterial Kind="Basket" Width="20" Height="20"/>
-                </Button>
-
-                <Button x:Name="account" Width="20" Height="20" 
-                        Margin="20 0 5 18"
-                        Click="account_Click" Style="{StaticResource TopButton}">
-                <Icon:PackIconMaterial Kind="Account"/>
                 </Button>
 
                 <Border Grid.Row="1" Background="#d61818" CornerRadius="30 0 0 0">

@@ -24,7 +24,7 @@ namespace CourseProject.Pages
     public partial class EditDishes : Page
     {
         Dishes Dishes = new Dishes();
-        Dishes selectedDish; // Выбранное блюдо
+        Dishes selectedDish;
         Main mainPage;
 
         public EditDishes(Main mainPage, Dishes selectedDish)
@@ -42,7 +42,7 @@ namespace CourseProject.Pages
             }
             else
             {
-                Dishes = new Dishes(); // Инициализация нового объекта, если dishes равен null
+                Dishes = new Dishes();
             }
 
             CmbGroup.ItemsSource = CourseEntities.GetContext().Group.ToList();
@@ -56,52 +56,42 @@ namespace CourseProject.Pages
 
             if (selectedDish != null)
             {
-                // Устанавливаем значения элементов управления в соответствии с выбранным блюдом
                 TxtName.Text = selectedDish.Name;
-                // Продолжите для других свойств (например, TxtPrice, CmbGroup)
-
-                // Пример для комбо-бокса
                 CmbGroup.SelectedValue = selectedDish.ID_Group;
+                txtPrice.Text = selectedDish.Price.ToString();
+                TxtImagePath.Text = selectedDish.ImagePath;
             }
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            // Проверяем, выбрано ли блюдо
             if (selectedDish != null)
             {
-                // Создаем новый контекст базы данных
                 using (var context = new CourseEntities())
                 {
-                    // Отсоединяем выбранное блюдо от текущего контекста
-                    var entry = context.Entry(selectedDish);
-                    if (entry.State != EntityState.Detached)
+                    var existingDish = context.Dishes.Find(selectedDish.ID_Dishes);
+
+                    if (existingDish != null)
                     {
-                        entry.State = EntityState.Detached;
+                        existingDish.Name = TxtName.Text;
+                        existingDish.ID_Group = (int)CmbGroup.SelectedValue;
+                        existingDish.Price = double.Parse(txtPrice.Text);
+                        existingDish.ImagePath = TxtImagePath.Text;
+
+                        context.SaveChanges();
+
+                        selectedDish.Name = existingDish.Name;
+                        selectedDish.ID_Group = existingDish.ID_Group;
+                        selectedDish.Price = existingDish.Price;
+                        selectedDish.ImagePath = existingDish.ImagePath;
                     }
-
-                    // Прикрепляем выбранное блюдо к текущему контексту
-                    context.Dishes.Attach(selectedDish);
-
-                    // Обновляем свойства выбранного блюда с новыми значениями
-                    selectedDish.Name = TxtName.Text;
-                    selectedDish.ID_Group = (int)CmbGroup.SelectedValue;
-                    selectedDish.Price = double.Parse(txtPrice.Text);
-                    selectedDish.ImagePath = TxtImagePath.Text;
-
-                    // Сохраняем изменения в базе данных
-                    context.SaveChanges();
                 }
 
-                // Обновляем ListView на главной странице
                 mainPage.UpdateListView();
             }
 
-            // Возвращаемся на главную страницу
             ClassFrame.frmObj.Navigate(mainPage);
         }
-
-
 
         private void AddImage_Click(object sender, RoutedEventArgs e)
         {
@@ -111,18 +101,14 @@ namespace CourseProject.Pages
             {
                 string imagePath = openFileDialog.FileName;
 
-                // Проверяем, что путь к изображению не является пустым
                 if (!string.IsNullOrEmpty(imagePath))
                 {
-                    // Отображаем выбранное изображение
                     MyImage.Source = new BitmapImage(new Uri(imagePath));
 
-                    // Сохраняем путь к выбранному изображению в TextBox (это предполагается в вашем XAML)
                     TxtImagePath.Text = imagePath;
                 }
                 else
                 {
-                    // Обработка случая, если путь к изображению пустой
                     MessageBox.Show("Выбранный файл изображения не найден.");
                 }
             }

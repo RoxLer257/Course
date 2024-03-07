@@ -29,6 +29,8 @@ namespace CourseProject.Pages
     {
         private string _notificationText;
 
+        private int _id_Role;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string NotificationText
@@ -44,9 +46,16 @@ namespace CourseProject.Pages
         public basket()
         {
             InitializeComponent();
+            _id_Role = ClassFrame.ID_Role;
             UpdateDataGrid(BasketLtV);
             Loaded += totalsum_Loaded;
+            Loaded += Basket_Loaded;
             DataContext = this;
+        }
+
+        private void Basket_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateDataGrid(BasketLtV);
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -56,17 +65,13 @@ namespace CourseProject.Pages
 
         private void UpdateDataGrid(DataGrid dataGrid)
         {
-            dataGrid.ItemsSource = null;
             using (var dbContext = new CourseEntities())
             {
-                dataGrid.ItemsSource = dbContext.Dishes.ToList();
-                dataGrid.ItemsSource = dbContext.Order.ToList();
-            }
-        }
+                var dishes = dbContext.Dishes.ToList();
 
-        private void account_Click(object sender, RoutedEventArgs e)
-        {
-            ClassFrame.frmObj.Navigate(new Account());
+                var userOrders = dbContext.Order.Where(o => o.id_Users == ClassFrame.ID_Role).ToList();
+                dataGrid.ItemsSource = userOrders;
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -86,12 +91,9 @@ namespace CourseProject.Pages
             {
                 using (var dbContext = new CourseEntities())
                 {
-
-                    // Удалить все записи из таблицы Order
                     var orders = dbContext.Order.ToList();
                     dbContext.Order.RemoveRange(orders);
 
-                    // Сохранить изменения в базе данных
                     dbContext.SaveChanges();
                 }
             }
@@ -101,10 +103,8 @@ namespace CourseProject.Pages
 
         private void totalsum_Loaded(object sender, RoutedEventArgs e)
         {
-            // Инициализируем переменную для хранения общей суммы заказа
             double totalPrice = 0;
 
-            // Вычисляем общую сумму заказа на основе данных в BasketLtV
             foreach (var item in BasketLtV.Items)
             {
                 if (item is Order order)
@@ -113,7 +113,6 @@ namespace CourseProject.Pages
                 }
             }
 
-            // Устанавливаем общую сумму заказа в TextBlock
             totalsum.Text = totalPrice.ToString();
         }
 
@@ -123,9 +122,8 @@ namespace CourseProject.Pages
 
             if (selectedOrder != null)
             {
-                using (var dbContext = new CourseEntities())
+                using (var dbContext = new CourseEntities ())
                 {
-                    // Находим объект Order в контексте базы данных
                     var orderToDelete = dbContext.Order.Find(selectedOrder.ID_Order);
 
                     if (orderToDelete != null)
@@ -133,17 +131,41 @@ namespace CourseProject.Pages
                         dbContext.Order.Remove(orderToDelete);
                         dbContext.SaveChanges();
 
-                        // Обновляем DataGrid и общую сумму заказа
                         UpdateDataGrid(BasketLtV);
-                        totalsum_Loaded(sender,e);
+                        UpdateTotalSum();
                     }
                 }
             }
 
+            ShowNotification();
+        }
+
+        private void UpdateTotalSum()
+        {
+            double totalPrice = 0;
+
+            if (BasketLtV.Items.Count == 0)
+            {
+                totalsum.Text = "0";
+                return; 
+            }
+
+            foreach (var item in BasketLtV.Items)
+            {
+                if (item is Order order)
+                {
+                    totalPrice += order.Summa;
+                }
+            }
+
+            totalsum.Text = totalPrice.ToString();
+        }
+
+        private void ShowNotification()
+        {
             NotificationText = "Блюдо удалено из корзины";
             NotificationBorder.Visibility = Visibility.Visible;
 
-            // Запускаем таймер для скрытия уведомления через 2 секунды
             var timer = new System.Windows.Threading.DispatcherTimer();
             timer.Tick += (s, args) =>
             {

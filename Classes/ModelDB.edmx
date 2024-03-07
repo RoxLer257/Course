@@ -33,6 +33,13 @@
           <Property Name="Summa" Type="float" Nullable="false" />
           <Property Name="Order_Date" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="Order_History">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_Order" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Roles">
           <Key>
             <PropertyRef Name="ID_Role" />
@@ -73,6 +80,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Order_History_Order">
+          <End Role="Order" Type="Self.Order" Multiplicity="1" />
+          <End Role="Order_History" Type="Self.Order_History" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="ID_Order" />
+            </Principal>
+            <Dependent Role="Order_History">
+              <PropertyRef Name="ID_Order" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Order_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Order" Type="Self.Order" Multiplicity="*" />
@@ -101,6 +120,7 @@
           <EntitySet Name="Dishes" EntityType="Self.Dishes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order_History" EntityType="Self.Order_History" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Dishes_Group" Association="Self.FK_Dishes_Group">
@@ -110,6 +130,10 @@
           <AssociationSet Name="FK_Order_Dishes" Association="Self.FK_Order_Dishes">
             <End Role="Dishes" EntitySet="Dishes" />
             <End Role="Order" EntitySet="Order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_History_Order" Association="Self.FK_Order_History_Order">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="Order_History" EntitySet="Order_History" />
           </AssociationSet>
           <AssociationSet Name="FK_Order_Users" Association="Self.FK_Order_Users">
             <End Role="Users" EntitySet="Users" />
@@ -144,6 +168,7 @@
           <Property Name="Order_Date" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Order_Users" FromRole="Order" ToRole="Users" />
           <NavigationProperty Name="Dishes" Relationship="CourseModel.FK_Order_Dishes" FromRole="Order" ToRole="Dishes" />
+          <NavigationProperty Name="Order_History" Relationship="CourseModel.FK_Order_History_Order" FromRole="Order" ToRole="Order_History" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -210,6 +235,11 @@
             <End Role="Dishes" EntitySet="Dishes" />
             <End Role="Order" EntitySet="Order" />
           </AssociationSet>
+          <EntitySet Name="Order_History" EntityType="CourseModel.Order_History" />
+          <AssociationSet Name="FK_Order_History_Order" Association="CourseModel.FK_Order_History_Order">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="Order_History" EntitySet="Order_History" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Dishes">
           <Key>
@@ -244,6 +274,26 @@
             </Principal>
             <Dependent Role="Order">
               <PropertyRef Name="ID_Dishes" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Order_History">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_Order" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="CourseModel.FK_Order_History_Order" FromRole="Order_History" ToRole="Order" />
+        </EntityType>
+        <Association Name="FK_Order_History_Order">
+          <End Type="CourseModel.Order" Role="Order" Multiplicity="1" />
+          <End Type="CourseModel.Order_History" Role="Order_History" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="ID_Order" />
+            </Principal>
+            <Dependent Role="Order_History">
+              <PropertyRef Name="ID_Order" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -299,6 +349,14 @@
                 <ScalarProperty Name="ID_Group" ColumnName="ID_Group" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID_Dishes" ColumnName="ID_Dishes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order_History">
+            <EntityTypeMapping TypeName="CourseModel.Order_History">
+              <MappingFragment StoreEntitySet="Order_History">
+                <ScalarProperty Name="ID_Order" ColumnName="ID_Order" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

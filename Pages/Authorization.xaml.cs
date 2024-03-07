@@ -48,6 +48,7 @@ namespace CourseProject.Pages
                 {
                     Classes.ClassFrame.ID_Role = user.id_Users;
                     Classes.ClassFrame.frmObj.Navigate(new Pages.Main());
+
                 }
             }
             catch (Exception ex)

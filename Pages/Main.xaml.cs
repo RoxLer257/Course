@@ -83,11 +83,6 @@ namespace CourseProject.Pages
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void account_Click(object sender, RoutedEventArgs e)
-        {
-            ClassFrame.frmObj.Navigate(new Account());
-        }
-
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             string search = txtSearch.Text;
@@ -100,10 +95,8 @@ namespace CourseProject.Pages
 
             try
             {
-                // Получить выбранную группу
                 string selectedGroupName = "Горячие блюда";
 
-                // Получить блюда из базы данных только для выбранной группы
                 var dishes = _context.Dishes.Include("Group")
                                             .Where(d => d.Group.Name_Group == selectedGroupName)
                                             .ToList();
@@ -121,10 +114,8 @@ namespace CourseProject.Pages
         {
             try
             {
-                // Получить выбранную группу
                 string selectedGroupName = "Супы";
 
-                // Получить блюда из базы данных только для выбранной группы
                 var dishes = _context.Dishes.Include("Group")
                                             .Where(d => d.Group.Name_Group == selectedGroupName)
                                             .ToList();
@@ -137,14 +128,12 @@ namespace CourseProject.Pages
             }
         }
 
-        private void hotdrinks_Click(object sender, RoutedEventArgs e)
+        private void hotdrinks_Click(object sender, RoutedEventArgs e)  
         {
             try
             {
-                // Получить выбранную группу
                 string selectedGroupName = "Горячие напитки";
 
-                // Получить блюда из базы данных только для выбранной группы
                 var dishes = _context.Dishes.Include("Group")
                                             .Where(d => d.Group.Name_Group == selectedGroupName)
                                             .ToList();
@@ -161,10 +150,8 @@ namespace CourseProject.Pages
         {
             try
             {
-                // Получить выбранную группу
                 string selectedGroupName = "Холодные напитки";
 
-                // Получить блюда из базы данных только для выбранной группы
                 var dishes = _context.Dishes.Include("Group")
                                             .Where(d => d.Group.Name_Group == selectedGroupName)
                                             .ToList();
@@ -181,10 +168,8 @@ namespace CourseProject.Pages
         {
             try
             {
-                // Получить выбранную группу
                 string selectedGroupName = "Салаты";
 
-                // Получить блюда из базы данных только для выбранной группы
                 var dishes = _context.Dishes.Include("Group")
                                             .Where(d => d.Group.Name_Group == selectedGroupName)
                                             .ToList();
@@ -201,10 +186,8 @@ namespace CourseProject.Pages
         {
             try
             {
-                // Получить выбранную группу
                 string selectedGroupName = "Гарниры и соусы";
 
-                // Получить блюда из базы данных только для выбранной группы
                 var dishes = _context.Dishes.Include("Group")
                                             .Where(d => d.Group.Name_Group == selectedGroupName)
                                             .ToList();
@@ -221,10 +204,8 @@ namespace CourseProject.Pages
         {
             try
             {
-                // Получить выбранную группу
                 string selectedGroupName = "Десерты";
 
-                // Получить блюда из базы данных только для выбранной группы
                 var dishes = _context.Dishes.Include("Group")
                                             .Where(d => d.Group.Name_Group == selectedGroupName)
                                             .ToList();
@@ -241,10 +222,8 @@ namespace CourseProject.Pages
         {
             try
             {
-                // Получить выбранную группу
                 string selectedGroupName = "Фаст-фуд"; 
 
-                // Получить блюда из базы данных только для выбранной группы
                 var dishes = _context.Dishes.Include("Group")
                                             .Where(d => d.Group.Name_Group == selectedGroupName)
                                             .ToList();
@@ -261,10 +240,8 @@ namespace CourseProject.Pages
         {
             try
             {
-                // Получить выбранную группу
                 string selectedGroupName = "Пицца"; 
 
-                // Получить блюда из базы данных только для выбранной группы
                 var dishes = _context.Dishes.Include("Group")
                                             .Where(d => d.Group.Name_Group == selectedGroupName)
                                             .ToList();
@@ -281,10 +258,8 @@ namespace CourseProject.Pages
         {
             try
             {
-                // Получить выбранную группу
                 string selectedGroupName = "Стейки"; 
 
-                // Получить блюда из базы данных только для выбранной группы
                 var dishes = _context.Dishes.Include("Group")
                                             .Where(d => d.Group.Name_Group == selectedGroupName)
                                             .ToList();
@@ -312,21 +287,19 @@ namespace CourseProject.Pages
 
                 using (var dbContext = new CourseEntities())
                 {
-                    Order existingOrder = dbContext.Order.FirstOrDefault(o => o.ID_Dishes == dish.ID_Dishes);
+                    Order existingOrder = dbContext.Order.FirstOrDefault(o => o.ID_Dishes == dish.ID_Dishes && o.id_Users == ClassFrame.ID_Role);
 
                     if (existingOrder != null)
                     {
-                        // Если заказ уже существует, увеличиваем количество и пересчитываем сумму
                         existingOrder.Quantity++;
                         existingOrder.Summa = existingOrder.Quantity * (float)dish.Price;
                     }
                     else
                     {
-                        // Если заказа ещё нет, создаем новый заказ
                         Order newOrder = new Order
                         {
                             ID_Dishes = dish.ID_Dishes,
-                            id_Users = 1,
+                            id_Users = ClassFrame.ID_Role,
                             Quantity = 1,
                             Summa = (float)dish.Price,
                             Order_Date = DateTime.Now
@@ -339,7 +312,6 @@ namespace CourseProject.Pages
                     NotificationText = "Блюдо добавлено в корзину";
                     NotificationBorder.Visibility = Visibility.Visible;
 
-                    // Запускаем таймер для скрытия уведомления через 2 секунды
                     var timer = new System.Windows.Threading.DispatcherTimer();
                     timer.Tick += (s, args) =>
                     {
@@ -393,15 +365,12 @@ namespace CourseProject.Pages
 
         private void EditDish_Click(object sender, RoutedEventArgs e)
         {
-            // Получаем выбранное блюдо из ListView
             var selectedDish = ListViewDishes.SelectedItem as Dishes;
 
             if (selectedDish != null)
             {
-                // Создаем экземпляр AddDishes и передаем в него текущий экземпляр Main и выбранное блюдо
                 EditDishes editDishesPage = new EditDishes(this, selectedDish);
 
-                // Открываем страницу AddDishes для редактирования выбранного блюда
                 ClassFrame.frmObj.Navigate(editDishesPage);
             }
             else

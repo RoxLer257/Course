@@ -17,10 +17,8 @@ namespace CourseProject.Classes
 
         public int GetUserId(string login)
         {
-            // Находим пользователя по логину
             var user = dbContext.Users.FirstOrDefault(u => u.Login == login);
 
-            // Если пользователь найден, возвращаем его идентификатор, иначе возвращаем -1 или другое значение по умолчанию
             return user != null ? user.id_Users : -1;
         }
     }
