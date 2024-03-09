@@ -10,8 +10,4 @@
 
 # Документация
 
-Документация и презентация находятся на **яндекс диске**:
-
-**Презентация** : https://disk.yandex.ru/edit/disk/disk%2FKursovoy_proekt.pptx?sk=ye65444edc50bffbc6e28efe00dd8f000
-
-**Документация** : https://disk.yandex.ru/edit/disk/disk%2FVvedenie_Serebryakov_V_A.docx?sk=ye65444edc50bffbc6e28efe00dd8f000
+Документация и презентация находятся в другой **ветке** - Documentation
