@@ -30,12 +30,6 @@
                        Source= "/Images/doordash_logo.png"/>
 
             </StackPanel>
-
-            <Grid Margin="200 100 200 100"
-                  Grid.Row="1"
-                  VerticalAlignment="Bottom">
-                <ProgressBar x:Name="loadingProgressBar" IsIndeterminate="True" VerticalAlignment="Top" Visibility="Collapsed"/>
-            </Grid>
         </Grid>
     </Border>
 </Window>
