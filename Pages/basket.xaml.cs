@@ -86,7 +86,7 @@ namespace CourseProject.Pages
 
         private void Pay_Click(object sender, RoutedEventArgs e)
         {
-            if (BasketLtV.Items.Count == 0)
+            if (BasketLtV.Items.Count == 1)
             {
                 MessageBox.Show("Корзина пуста. Пожалуйста, добавьте товары перед оплатой.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
