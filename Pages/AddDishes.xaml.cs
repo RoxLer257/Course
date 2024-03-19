@@ -60,7 +60,6 @@ namespace CourseProject.Pages
             DataContext = Dishes;
         }
 
-        // добавление не локально(проверить)
         private void AddImage_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -96,36 +95,25 @@ namespace CourseProject.Pages
             }
         }
 
-        // добавление локально
-        //private void AddImage_Click(object sender, RoutedEventArgs e)
-        //{
-        //    OpenFileDialog openFileDialog = new OpenFileDialog();
-        //    openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|All files (*.*)|*.*";
-        //    if (openFileDialog.ShowDialog() == true)
-        //    {
-        //        string imagePath = openFileDialog.FileName;
-
-        //        if (!string.IsNullOrEmpty(imagePath))
-        //        {
-        //            MyImage.Source = new BitmapImage(new Uri(imagePath));
-
-        //            TxtImagePath.Text = imagePath;
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("Выбранный файл изображения не найден.");
-        //        }
-        //    }
-        //}
-
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             Classes.ClassFrame.frmObj.Navigate(new Main());
         }
 
-        //основное сохранение
         private void Save_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(TxtName.Text) || CmbGroup.SelectedValue == null || string.IsNullOrWhiteSpace(TxtPrice.Text) || string.IsNullOrWhiteSpace(TxtImagePath.Text))
+            {
+                MessageBox.Show("Необходимо заполнить все поля", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            
+            if (!double.TryParse(TxtPrice.Text, out double price))
+            {
+                MessageBox.Show("Некорректно введена цена", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             using (var context = new CourseEntities())
             {
                 Dishes newDish = new Dishes

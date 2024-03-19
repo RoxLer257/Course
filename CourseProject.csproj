@@ -110,9 +110,6 @@
     <Compile Include="Classes\Order.cs">
       <DependentUpon>ModelDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Classes\Order_History.cs">
-      <DependentUpon>ModelDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Classes\Roles.cs">
       <DependentUpon>ModelDB.tt</DependentUpon>
     </Compile>

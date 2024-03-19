@@ -44,13 +44,6 @@ namespace CourseProject.Pages
 
         private void ProcessPay()
         {
-            if (BasketLtV.Items.Count == 1)
-            {
-                MessageBox.Show("Корзина пуста. Пожалуйста, добавьте товары перед оплатой.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                Close();
-            }
-            else
-            {
                 StringBuilder message = new StringBuilder();
                 double totalSum = 0;
 
@@ -85,7 +78,6 @@ namespace CourseProject.Pages
                 }
 
                 Close();
-            }
         }
     }
 }

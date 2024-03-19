@@ -1,6 +1,5 @@
 ﻿using CourseProject.Classes;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -17,9 +16,6 @@ using System.Windows.Shapes;
 
 namespace CourseProject.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для Authorization.xaml
-    /// </summary>
     public partial class Authorization : Page
     {
 
@@ -35,21 +31,36 @@ namespace CourseProject.Pages
 
             try
             {
-                var user = AppConnect.CourseEntities.Users.FirstOrDefault(u => u.Login == login && u.Password == password);
+                var user = AppConnect.CourseEntities.Users.FirstOrDefault(u => u.Login == login);
+
+                if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
+                {
+                    MessageBox.Show("Необходимо заполнить все поля", "Ошибка при авторизации",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
                 if (user == null)
                 {
-                    txtLogin.ToolTip = "Такого пользователя нет";
+                    txtLogin.ToolTip = "Неверный логин";
                     txtLogin.Background = Brushes.Red;
-                    MessageBox.Show("Такого пользователя нет", "Ошибка при авторизации",
+                    MessageBox.Show("Неверный логин", "Ошибка при авторизации",
                         MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
                 }
-                else
-                {
-                    Classes.ClassFrame.ID_Role = user.id_Users;
-                    Classes.ClassFrame.frmObj.Navigate(new Pages.Main());
 
+                if (user.Password != password)
+                {
+                    txtpass.Clear();
+                    txtpass.ToolTip = "Неправильный пароль";
+                    txtpass.Background = Brushes.Red;
+                    MessageBox.Show("Неправильный пароль", "Ошибка при авторизации",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
                 }
+
+                Classes.ClassFrame.ID_Role = user.id_Users;
+                Classes.ClassFrame.frmObj.Navigate(new Pages.Main());
             }
             catch (Exception ex)
             {
@@ -57,7 +68,6 @@ namespace CourseProject.Pages
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         private void BtnReg_Click(object sender, RoutedEventArgs e)
         {
             ClassFrame.frmObj.Navigate(new Registration());

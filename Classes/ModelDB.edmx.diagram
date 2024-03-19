@@ -14,8 +14,6 @@
         <EntityTypeShape EntityType="CourseModel.Dishes" Width="1.5" PointX="3" PointY="5" />
         <AssociationConnector Association="CourseModel.FK_Dishes_Group" />
         <AssociationConnector Association="CourseModel.FK_Order_Dishes" />
-        <EntityTypeShape EntityType="CourseModel.Order_History" Width="1.5" PointX="7.5" PointY="1.625" />
-        <AssociationConnector Association="CourseModel.FK_Order_History_Order" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

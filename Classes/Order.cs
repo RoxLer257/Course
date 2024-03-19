@@ -14,12 +14,6 @@ namespace CourseProject.Classes
     
     public partial class Order
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Order()
-        {
-            this.Order_History = new HashSet<Order_History>();
-        }
-    
         public int ID_Order { get; set; }
         public int ID_Dishes { get; set; }
         public int id_Users { get; set; }
@@ -29,7 +23,5 @@ namespace CourseProject.Classes
     
         public virtual Users Users { get; set; }
         public virtual Dishes Dishes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order_History> Order_History { get; set; }
     }
 }
